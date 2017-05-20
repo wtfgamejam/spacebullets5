@@ -2,36 +2,67 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
+public class Boundary
+{
+	public float xMin, xMax, yMin, yMax;
+}
+
 public class PlayerController : MonoBehaviour {
 
-	public float moveSpeed = 0.05f;
-	// Use this for initialization
-	void Start () {
-		
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		Vector3 direction = transform.localPosition;
-		float x = direction.x;
-		float y = direction.y;
-		if(Input.GetKey(KeyCode.W))
-		{
-			y += moveSpeed;
-		}
-		if(Input.GetKey(KeyCode.A))
-		{
-			x -= moveSpeed;
-		}
-		if(Input.GetKey(KeyCode.S))
-		{
-			y -= moveSpeed;
-		}
-		if(Input.GetKey(KeyCode.D))
-		{
-			x += moveSpeed;
-		}
+	public float moveSpeed = 50f;
+	public Boundary boundary;
 
-		transform.localPosition = new Vector3(x,y,direction.z);
+	Rigidbody body;
+	void Awake()
+	{
+		body = GetComponent<Rigidbody>();
+
+		float camDistance = Vector3.Distance(transform.position, Camera.main.transform.position);
+		Vector3 pMin = transform.InverseTransformPoint( Camera.main.ViewportToWorldPoint(new Vector3(0, 0, camDistance)) );
+		Vector3 pMax = transform.InverseTransformPoint( Camera.main.ViewportToWorldPoint(new Vector3(1, 1, camDistance)) );
+		boundary.xMin = pMin.x;
+		boundary.xMax = pMax.x;
+		boundary.yMin = pMin.y;
+		boundary.yMax = pMax.y;
+	}
+
+	void FixedUpdate () {
+		float moveHorizontal = Input.GetAxis("Horizontal");
+		float moveVertical = Input.GetAxis("Vertical");
+
+		Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
+		Vector3 locVel = movement * moveSpeed;
+	   	body.velocity = transform.TransformDirection(locVel);
+		//body.velocity = movement * moveSpeed;
+
+		transform.localPosition = new Vector3
+		(
+			Mathf.Clamp(transform.localPosition.x, boundary.xMin, boundary.xMax),
+			Mathf.Clamp(transform.localPosition.y, boundary.yMin, boundary.yMax),
+			transform.localPosition.z
+		);
+		
+//		Vector3 direction = transform.localPosition;
+//		float x = direction.x;
+//		float y = direction.y;
+//		if(Input.GetKey(KeyCode.W))
+//		{
+//			y += moveSpeed;
+//		}
+//		if(Input.GetKey(KeyCode.A))
+//		{
+//			x -= moveSpeed;
+//		}
+//		if(Input.GetKey(KeyCode.S))
+//		{
+//			y -= moveSpeed;
+//		}
+//		if(Input.GetKey(KeyCode.D))
+//		{
+//			x += moveSpeed;
+//		}
+//
+//		transform.localPosition = new Vector3(x,y,direction.z);
 	}
 }
