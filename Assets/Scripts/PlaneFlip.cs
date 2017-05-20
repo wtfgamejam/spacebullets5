@@ -5,6 +5,9 @@ using DG.Tweening;
 
 public class PlaneFlip : MonoBehaviour {
 
+	public int dimension;
+	public const int numDimensions = 4;
+
 	Vector3 targetAngle;
 	Vector3 currentAngle;
 	float rotationSpeed = 90f;
@@ -12,8 +15,8 @@ public class PlaneFlip : MonoBehaviour {
 	float lerpTime = 0.25f;
 
 	// Use this for initialization
-	void Start () {
-		
+	void OnEnable () {
+		dimension = 0;
 	}
 
 	// Update is called once per frame
@@ -23,11 +26,17 @@ public class PlaneFlip : MonoBehaviour {
 		{
 			targetAngle = new Vector3(0f,targetAngle.y-rotationSpeed,0f);
 			currentLerpTime = 0f;
+			dimension--;
+			if(dimension<0) dimension = numDimensions-1;
+			Debug.Log("Change Dimension to "+dimension.ToString());
 		}
 		if(Input.GetKeyDown(KeyCode.E))
 		{
 			targetAngle = new Vector3(0f,targetAngle.y+rotationSpeed,0f);
 			currentLerpTime = 0f;
+			dimension++;
+			if(dimension>=numDimensions) dimension = 0;
+			Debug.Log("Change Dimension to "+dimension.ToString());
 		}
  
         //increment timer once per frame
