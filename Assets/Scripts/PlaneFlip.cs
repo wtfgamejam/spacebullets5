@@ -5,38 +5,46 @@ using DG.Tweening;
 
 public class PlaneFlip : MonoBehaviour {
 
-	Vector3 rotation;
+	Vector3 targetAngle;
+	Vector3 currentAngle;
 	float rotationSpeed = 90f;
+	float currentLerpTime = 0f;
+	float lerpTime = 0.25f;
 
 	// Use this for initialization
 	void Start () {
-		rotation = Vector3.zero;
+		
 	}
-	
+
 	// Update is called once per frame
 	void Update () {
-		float x = rotation.x;
-		float y = rotation.y;
+		Vector3 axis = Vector3.zero;
 		if(Input.GetKeyDown(KeyCode.Q))
 		{
-			x += rotationSpeed;
-		}
-		if(Input.GetKeyDown(KeyCode.C))
-		{
-			x -= rotationSpeed;
+			targetAngle = new Vector3(0f,targetAngle.y-rotationSpeed,0f);
+			currentLerpTime = 0f;
 		}
 		if(Input.GetKeyDown(KeyCode.E))
 		{
-			y += rotationSpeed;
+			targetAngle = new Vector3(0f,targetAngle.y+rotationSpeed,0f);
+			currentLerpTime = 0f;
 		}
-		if(Input.GetKeyDown(KeyCode.Z))
-		{
-			y -= rotationSpeed;
-		}
+ 
+        //increment timer once per frame
+        currentLerpTime += Time.deltaTime;
+        if (currentLerpTime > lerpTime) {
+            currentLerpTime = lerpTime;
+        }
+ 
+        //lerp!
+		float perc = currentLerpTime / lerpTime;
+		currentAngle = new Vector3(
+			Mathf.LerpAngle(currentAngle.x, targetAngle.x, perc),
+			Mathf.LerpAngle(currentAngle.y, targetAngle.y, perc),
+			Mathf.LerpAngle(currentAngle.z, targetAngle.z, perc));
+ 
+        transform.eulerAngles = currentAngle;
 
-		rotation = new Vector3(x,y,0f);
-
-		transform.DOKill();
-		transform.DORotate(rotation, 0.5f, RotateMode.FastBeyond360);
+		//transform.Rotate(axis, rotationSpeed);
 	}
 }
