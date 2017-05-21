@@ -12,10 +12,17 @@ public class PlayerController : MonoBehaviour {
 
 	public float moveSpeed = 50f;
 	public Boundary boundary;
+	public ParticleSystem gun;
+	public float cooldownTime = 0.05f;
 
+	float timeBetweenFire = 0f;
 	Rigidbody body;
+
 	void Awake()
 	{
+
+		timeBetweenFire = 0f;
+
 		body = GetComponent<Rigidbody>();
 
 		float camDistance = Vector3.Distance(transform.position, Camera.main.transform.position);
@@ -42,27 +49,16 @@ public class PlayerController : MonoBehaviour {
 			Mathf.Clamp(transform.localPosition.y, boundary.yMin, boundary.yMax),
 			transform.localPosition.z
 		);
-		
-//		Vector3 direction = transform.localPosition;
-//		float x = direction.x;
-//		float y = direction.y;
-//		if(Input.GetKey(KeyCode.W))
-//		{
-//			y += moveSpeed;
-//		}
-//		if(Input.GetKey(KeyCode.A))
-//		{
-//			x -= moveSpeed;
-//		}
-//		if(Input.GetKey(KeyCode.S))
-//		{
-//			y -= moveSpeed;
-//		}
-//		if(Input.GetKey(KeyCode.D))
-//		{
-//			x += moveSpeed;
-//		}
-//
-//		transform.localPosition = new Vector3(x,y,direction.z);
 	}
+
+	void Update()
+	{
+		if(Input.GetButton("Fire1") && timeBetweenFire >= cooldownTime)
+		{
+			timeBetweenFire = 0f;
+			gun.Emit(1);
+		}
+
+		timeBetweenFire += Time.deltaTime; 
+	}	
 }
