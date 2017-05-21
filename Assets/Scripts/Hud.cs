@@ -47,7 +47,7 @@ public class Hud : MonoBehaviour {
 		health.value = hitPoints;
 		if(hitPoints <=0)
 		{
-			SceneManager.LoadScene("Start");
+			//SceneManager.LoadScene("Start");
 		}
 	}
 
