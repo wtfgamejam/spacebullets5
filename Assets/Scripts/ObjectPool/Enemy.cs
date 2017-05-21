@@ -3,6 +3,9 @@
 [RequireComponent(typeof(Rigidbody))]
 public class Enemy : PooledObject {
 
+	public static event System.Action OnHit = ()=>{};
+	public static event System.Action OnHitPlayer = () => {};
+
 	public Material rageMaterial;
 
 	float MoveSpeed = 50f;
@@ -52,9 +55,10 @@ public class Enemy : PooledObject {
 	void OnTriggerEnter (Collider enteredCollider) {
 		if (enteredCollider.CompareTag("Player")) {
 			ReturnToPool();
+			OnHitPlayer();
 		}
 		if (enteredCollider.CompareTag("Plane")) {
-			Debug.Log("Hit plane, ATTACK!");
+			//Debug.Log("Hit plane, ATTACK!");
 			attack = true;
 			SetMaterial(rageMaterial);
 			Body.velocity = Vector3.zero;
@@ -65,6 +69,7 @@ public class Enemy : PooledObject {
 	{
 		ReturnToPool();
 		Debug.Log("hit by bullet");
+		OnHit();
 	}
 
 	void OnLevelWasLoaded () {
