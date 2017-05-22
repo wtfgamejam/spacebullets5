@@ -6,11 +6,10 @@ public class Enemy : PooledObject {
 
 	public static event System.Action OnHit = ()=>{};
 	public static event System.Action OnHitPlayer = () => {};
+	public static event System.Action<Vector3> OnDestroy = (v) => {};
 
 	public Material rageMaterial;
-	public Material clearMaterial;
 	public GameObject rageParticle;
-	public GameObject destroyParticle;
 
 	float MoveSpeed = 50f;
 	float RageSpeed = 15f;
@@ -43,7 +42,6 @@ public class Enemy : PooledObject {
 	{
 		attack = false;
 		rageParticle.SetActive(false);
-		destroyParticle.SetActive(false);
 		col.enabled = true;
 	}
 
@@ -63,7 +61,7 @@ public class Enemy : PooledObject {
 
 	void OnTriggerEnter (Collider enteredCollider) {
 		if (enteredCollider.CompareTag("Player")) {
-			StartCoroutine(PlayDeath());
+			PlayDeath();
 			OnHitPlayer();
 		}
 		if (enteredCollider.CompareTag("Plane")) {
@@ -77,23 +75,14 @@ public class Enemy : PooledObject {
 
 	void OnParticleCollision (GameObject other)
 	{
-		StartCoroutine(PlayDeath());
+		PlayDeath();
 		Debug.Log("hit by bullet");
 		OnHit();
 	}
 
-	IEnumerator PlayDeath()
+	void PlayDeath()
 	{
-		col.enabled = false;
-		rageParticle.SetActive(false);
-		attack = false;
-		SetMaterial(clearMaterial);
-		destroyParticle.transform.SetParent(transform.parent);
-		destroyParticle.SetActive(true);
-
-		yield return new WaitForSeconds(1f);
-
-		destroyParticle.transform.SetParent(transform, false);
+		OnDestroy(transform.position);
 
 		ReturnToPool();
 	}
