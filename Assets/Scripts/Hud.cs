@@ -10,6 +10,7 @@ public class Hud : MonoBehaviour {
 	public Text dimension;
 	public Text score;
 	public Slider health;
+	public bool enableDeath = true;
 
 	int hits;
 	float hitPoints;
@@ -45,9 +46,9 @@ public class Hud : MonoBehaviour {
 	{
 		hitPoints -= 0.05f;
 		health.value = hitPoints;
-		if(hitPoints <=0)
+		if(hitPoints <=0 && enableDeath)
 		{
-			//SceneManager.LoadScene("Start");
+			SceneManager.LoadScene("Start");
 		}
 	}
 
