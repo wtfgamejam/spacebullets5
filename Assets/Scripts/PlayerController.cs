@@ -13,14 +13,15 @@ public class PlayerController : MonoBehaviour {
 	public float moveSpeed = 50f;
 	public Boundary boundary;
 	public ParticleSystem gun;
-	public float cooldownTime = 0.05f;
+	public float cooldownTime = 0.1f;
 
 	float timeBetweenFire = 0f;
 	Rigidbody body;
+	AudioSource audioSource;
 
 	void Awake()
 	{
-
+		audioSource = GetComponent<AudioSource>();
 		timeBetweenFire = 0f;
 
 		body = GetComponent<Rigidbody>();
@@ -57,6 +58,7 @@ public class PlayerController : MonoBehaviour {
 		{
 			timeBetweenFire = 0f;
 			gun.Emit(1);
+			audioSource.Play();
 		}
 
 		timeBetweenFire += Time.deltaTime; 

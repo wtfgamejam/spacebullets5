@@ -10,12 +10,14 @@ public class Enemy : PooledObject {
 
 	public Material rageMaterial;
 	public GameObject rageParticle;
+	public AudioClip rageMode;
 
 	float MoveSpeed = 50f;
 	float RageSpeed = 15f;
 	public Rigidbody Body { get; private set; }
 	BoxCollider col;
 
+	AudioSource audioSource;
 	MeshRenderer[] meshRenderers;
 	Material prevMaterial;
 	Material currentMaterial;
@@ -34,6 +36,7 @@ public class Enemy : PooledObject {
 	}
 
 	void Awake () {
+		audioSource = GetComponent<AudioSource>();
 		Body = GetComponent<Rigidbody>();
 		meshRenderers = GetComponentsInChildren<MeshRenderer>();
 		col = GetComponent<BoxCollider>();
@@ -47,6 +50,7 @@ public class Enemy : PooledObject {
 		attack = false;
 		rageParticle.SetActive(false);
 		col.enabled = true;
+
 	}
 
 	void Update()
@@ -70,6 +74,7 @@ public class Enemy : PooledObject {
 		}
 		if (enteredCollider.CompareTag("Plane")) {
 			//Debug.Log("Hit plane, ATTACK!");
+			//audioSource.PlayOneShot(rageMode);
 			attack = true;
 			SetMaterial(rageMaterial);
 			rageParticle.SetActive(true);
@@ -91,7 +96,7 @@ public class Enemy : PooledObject {
 	void OnParticleCollision (GameObject other)
 	{
 		PlayDeath();
-		Debug.Log("hit by bullet");
+		//Debug.Log("hit by bullet");
 		OnHit();
 	}
 
