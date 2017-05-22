@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using InControl;
 
 
 public class StartMenu : MonoBehaviour {
@@ -20,6 +21,15 @@ public class StartMenu : MonoBehaviour {
 			audio.loop = true;
 			audio.Play();
 			DontDestroyOnLoad(mainAudio);
+		}
+	}
+
+	void Update()
+	{
+		var inputDevice = InputManager.ActiveDevice;
+		if(inputDevice.AnyButtonIsPressed)
+		{
+			StartGame();
 		}
 	}
 
