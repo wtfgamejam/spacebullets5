@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
+using InControl;
 
 public class PlaneFlip : MonoBehaviour {
 
@@ -23,14 +24,15 @@ public class PlaneFlip : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update () {
+		var inputDevice = InputManager.ActiveDevice;
 		Vector3 axis = Vector3.zero;
-		if(Input.GetKeyDown(KeyCode.Q))
+		if(Input.GetKeyDown(KeyCode.Q) || inputDevice.LeftBumper.WasReleased)
 		{
 			targetAngle = new Vector3(0f,targetAngle.y-rotationSpeed,0f);
 			currentLerpTime = 0f;
 			ChangeDimension(-1);
 		}
-		if(Input.GetKeyDown(KeyCode.E))
+		if(Input.GetKeyDown(KeyCode.E) || inputDevice.RightBumper.WasReleased)
 		{
 			targetAngle = new Vector3(0f,targetAngle.y+rotationSpeed,0f);
 			currentLerpTime = 0f;

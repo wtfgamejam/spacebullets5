@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using InControl;
 
 [System.Serializable]
 public class Boundary
@@ -39,6 +40,14 @@ public class PlayerController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis("Horizontal");
 		float moveVertical = Input.GetAxis("Vertical");
 
+		var inputDevice = InputManager.ActiveDevice;
+
+		if(inputDevice == null)
+		{
+			moveHorizontal = inputDevice.LeftStickX;
+			moveVertical = inputDevice.LeftStickY;
+		}
+
 		Vector3 movement = new Vector3(moveHorizontal, moveVertical, 0f);
 		Vector3 locVel = movement * moveSpeed;
 	   	body.velocity = transform.TransformDirection(locVel);
@@ -54,7 +63,8 @@ public class PlayerController : MonoBehaviour {
 
 	void Update()
 	{
-		if(Input.GetButton("Fire1") && timeBetweenFire >= cooldownTime)
+		var inputDevice = InputManager.ActiveDevice;
+		if((Input.GetButton("Fire1") || inputDevice.RightTrigger.IsPressed)  && timeBetweenFire >= cooldownTime)
 		{
 			timeBetweenFire = 0f;
 			gun.Emit(1);
