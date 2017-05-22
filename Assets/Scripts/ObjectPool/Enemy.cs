@@ -17,6 +17,8 @@ public class Enemy : PooledObject {
 	BoxCollider col;
 
 	MeshRenderer[] meshRenderers;
+	Material prevMaterial;
+	Material currentMaterial;
 
 	GameObject player;
 	GameObject plane;
@@ -24,6 +26,8 @@ public class Enemy : PooledObject {
 	public bool attack=false;
 
 	public void SetMaterial (Material m) {
+		if(currentMaterial!=null)prevMaterial = currentMaterial;
+		currentMaterial = m;
 		for (int i = 0; i < meshRenderers.Length; i++) {
 			meshRenderers[i].material = m;
 		}
@@ -69,6 +73,17 @@ public class Enemy : PooledObject {
 			attack = true;
 			SetMaterial(rageMaterial);
 			rageParticle.SetActive(true);
+			Body.velocity = Vector3.zero;
+		}
+	}
+
+	void OnTriggerExit (Collider exitCollider)
+	{
+		if (exitCollider.CompareTag("Plane")) {
+			//Debug.Log("Hit plane, ATTACK!");
+			attack = false;
+			SetMaterial(prevMaterial);
+			rageParticle.SetActive(false);
 			Body.velocity = Vector3.zero;
 		}
 	}
