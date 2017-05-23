@@ -53,10 +53,9 @@ public class PlayerController : MonoBehaviour {
 		float moveHorizontal = Input.GetAxis("Horizontal");
 		float moveVertical = Input.GetAxis("Vertical");
 
-		var inputDevice = InputManager.ActiveDevice;
-
-		if(inputDevice == null)
+		if(InputManager.Devices.Count > 0)
 		{
+			var inputDevice = InputManager.ActiveDevice;
 			moveHorizontal = inputDevice.LeftStickX;
 			moveVertical = inputDevice.LeftStickY;
 		}
