@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-
+using DG.Tweening;
 
 public class Hud : MonoBehaviour {
+	public static event System.Action OnPlayerDeath = () =>{};
 
 	public Text dimension;
 	public Text score;
@@ -46,6 +47,7 @@ public class Hud : MonoBehaviour {
 
 	void OnDamage()
 	{
+		Camera.main.DOShakePosition(0.25f);
 		hitPoints -= 0.05f;
 		health.value = hitPoints;
 		if(hitPoints <=0 && enableDeath)
@@ -56,6 +58,7 @@ public class Hud : MonoBehaviour {
 
 	IEnumerator GameOver()
 	{
+		OnPlayerDeath();
 		gameOver.SetActive(true);
 
 		yield return new WaitForSeconds(3f);

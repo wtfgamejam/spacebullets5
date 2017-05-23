@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour {
 	public Boundary boundary;
 	public ParticleSystem gun;
 	public float cooldownTime = 0.1f;
+	public GameObject ship;
+	public GameObject explosion;
 
 	float timeBetweenFire = 0f;
 	Rigidbody body;
@@ -34,6 +36,17 @@ public class PlayerController : MonoBehaviour {
 		boundary.xMax = pMax.x;
 		boundary.yMin = pMin.y;
 		boundary.yMax = pMax.y;
+	}
+
+	void OnEnable()
+	{	
+		explosion.SetActive(false);
+		Hud.OnPlayerDeath += OnPlayerDeath;
+	}
+
+	void OnDestroy()
+	{
+		Hud.OnPlayerDeath -= OnPlayerDeath;
 	}
 
 	void FixedUpdate () {
@@ -73,4 +86,10 @@ public class PlayerController : MonoBehaviour {
 
 		timeBetweenFire += Time.deltaTime; 
 	}	
+
+	void OnPlayerDeath ()
+	{
+		ship.SetActive(false);
+		explosion.SetActive(true);	
+	}
 }
