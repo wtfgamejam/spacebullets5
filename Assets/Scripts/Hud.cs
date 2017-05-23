@@ -58,6 +58,8 @@ public class Hud : MonoBehaviour {
 
 	IEnumerator GameOver()
 	{
+		int prev = PlayerPrefs.GetInt("Score", 0);
+		if(prev > hits) PlayerPrefs.SetInt("Score", hits);
 		OnPlayerDeath();
 		gameOver.SetActive(true);
 
